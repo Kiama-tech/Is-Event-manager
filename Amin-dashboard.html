@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #1a252f);
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo img {
+            height: 50px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .logo h1 {
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
+
+        .top-nav {
+            background: rgba(255,255,255,0.95);
+            padding: 1rem;
+            position: fixed;
+            top: 80px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+
+        .top-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        .top-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        .top-nav a:hover::after {
+            width: 100%;
+        }
+
+        .top-nav .fa {
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            margin-top: 160px;
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .event-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .event-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .event-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .event-info {
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .event-status {
+            position: absolute;
+            top: -15px;
+            right: 15px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .upcoming { background: var(--secondary); color: white; }
+        .ongoing { background: var(--accent); color: white; }
+
+        .rsvp-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .rsvp-btn:hover {
+            background: var(--secondary);
+        }
+
+        @media (max-width: 768px) {
+            .top-nav ul {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                justify-content: center;
+            }
+            
+            .main-content {
+                margin-top: 140px;
+                padding: 1rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .footer {
+        background: var(--primary);
+        color: var(--light);
+        padding: 40px 20px 20px;
+        margin-top: 50px;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+    }
+
+    .footer-section h4 {
+        color: var(--secondary);
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+    }
+
+    .footer-section p, .footer-section a {
+        color: var(--light);
+        line-height: 1.6;
+        font-size: 0.9rem;
+    }
+
+    .footer-section a {
+        text-decoration: none;
+        display: block;
+        transition: color 0.3s;
+    }
+
+    .footer-section a:hover {
+        color: var(--secondary);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding-top: 30px;
+        margin-top: 30px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: -8px;
+}
+
+.form-input {
+    padding: 10px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+}
+
+.rsvp-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+           
+            <h1>School Event Manager</h1>
+        </div>
+    </header>
+
+    <nav class="top-nav">
+        <ul>
+
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="signup.html">Sign Up</a></li>
+            <li><a href="Login.html">Login</a></li>
+            <li><a href="Dashboard.html">Dashboard</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+            <li><a href="Account.html">Account</a></li>
+
+        </ul>
+    </nav>
+
+    <main class="main-content">
+    <div class="events-grid">
+        <div class="event-card">
+            <div class="event-info">
+                <h2>CREATE EVENT</h2>
+                <section class="registration-section animate-fade-in">
+                    <div class="form-group">
+                        <label class="form-label" for="event-name">Event Name</label>
+                        <input type="text" class="form-input" id="event-name" required>
+                        
+                        <label class="form-label" for="event-place">Event Place</label>
+                        <input type="text" class="form-input" id="event-place" required>
+                        
+                        <label class="form-label" for="event-date">Event Date</label>
+                        <input type="date" class="form-input" id="event-date" required>
+                        
+                        <button class="rsvp-btn" style="margin-top: 20px; width: 100%">Create Event</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+    <footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>Contact Us</h4>
+            <p>Email: eschoolventsystem@gmail.com</p>
+            <p>Phone: (+254) 7-1234-5678</p>
+            <p>Address: 123 Campus Road, Nairobi City</p>
+        </div>
+        
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="file:///C:/xampp/htdocs/Event_manager/Login.html">Log-In</a></li>
+                <li><a href="file:///C:/xampp/htdocs/Event_manager/signup.html">Sign-Up</a></li>
+                <li><a href="file:///C:/xampp/htdocs/Event_manager/Dashboard.html">Dashboard</a></li>
+              
+            </ul>
+        </div>
+        
+        
+    </div>
+    
+    <div class="footer-bottom">
+        <p>© <span id="year"></span> School Event Management System. All rights reserved.</p>
+    </div>
+</footer>
+
+
+
+</body>
+</html>

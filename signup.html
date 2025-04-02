@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Event System - Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #1a252f);
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo img {
+            height: 50px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .logo h1 {
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 140px 20px 60px;
+        }
+
+        .auth-box {
+            background: rgba(255,255,255,0.95);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .auth-option {
+            background: linear-gradient(135deg, var(--primary), #1a252f);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .auth-form {
+            padding: 40px;
+            background: white;
+        }
+
+        .auth-form h3 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .auth-form label {
+            display: block;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .auth-form input:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        #password-error {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin: -10px 0 15px;
+            display: none;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: var(--secondary);
+        }
+
+        @media (max-width: 768px) {
+            .auth-box {
+                grid-template-columns: 1fr;
+            }
+            
+            .auth-option {
+                padding: 30px;
+                text-align: center;
+            }
+            
+            .logo h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        .top-nav {
+            background: rgba(255,255,255,0.95);
+            padding: 1rem;
+            position: fixed;
+            top: 80px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .top-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .top-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .top-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        .top-nav a:hover::after {
+            width: 100%;
+        }
+
+        .footer {
+        background: var(--primary);
+        color: var(--light);
+        padding: 40px 20px 20px;
+        margin-top: 50px;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+    }
+
+    .footer-section h4 {
+        color: var(--secondary);
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+    }
+
+    .footer-section p, .footer-section a {
+        color: var(--light);
+        line-height: 1.6;
+        font-size: 0.9rem;
+    }
+
+    .footer-section a {
+        text-decoration: none;
+        display: block;
+        transition: color 0.3s;
+    }
+
+    .footer-section a:hover {
+        color: var(--secondary);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding-top: 30px;
+        margin-top: 30px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            
+            <h1>School Event Manager</h1>
+        </div>
+    </header>
+
+    <nav class="top-nav">
+        <ul>
+            <li><a href="Home_page.html">Home</a></li>
+            
+        </ul>
+    </nav>
+
+    <main class="auth-container">
+        <div class="auth-box">
+            <div class="auth-option">
+                <h2>Get Started</h2>
+                <p>Create your account to manage school events</p>
+            </div>
+            <div class="auth-form">
+                <form id="signup-form" action="signup.php" method="post">
+                    <h3>Create Account</h3>
+
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="admission_number">Admission Number</label>
+                    <input type="text" id="admission_number" name="admission_number" required>
+
+                    <label for="user_type">Select Account Type:</label>
+                    <select id="user_type" name="user_type" required onchange="toggleAdminKey()">
+                        <option value="" disabled selected>Select your account type</option>
+                        <option value="Student">Student</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Host">Host</option>
+                    </select>
+
+                    <div id="admin-key-container" style="display: none;">
+                        <label for="admin_key">Enter Admin Key:</label>
+                        <input type="password" id="admin_key" name="admin_key">
+                    </div>
+
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <div id="password-error" style="display:none; color:red;">Passwords do not match</div>
+
+                    <button type="submit" class="btn">Sign Up</button>
+
+                    <p>Already have an account? <a href="Login.html">Login here</a></p>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function toggleAdminKey() {
+            var userType = document.getElementById("user_type").value;
+            var adminKeyContainer = document.getElementById("admin-key-container");
+            var admissionNumberField = document.getElementById("admission_number");
+    
+            if (userType === "Admin") {
+                adminKeyContainer.style.display = "block";
+                admissionNumberField.removeAttribute("required");
+                admissionNumberField.value = ""; // Ensure it's empty if not used
+            } else {
+                adminKeyContainer.style.display = "none";
+                admissionNumberField.setAttribute("required", "required");
+            }
+        }
+    </script>
+    
+</body>
+</html>

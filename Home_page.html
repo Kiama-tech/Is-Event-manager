@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Event System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            padding-top: 160px;
+            background: #f8f9fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #1a252f);
+            color: white;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+         .logo h1 {
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: gradientShift 5s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Adjusted Navigation Positioning */
+        .top-nav {
+            top: 60px;
+            background: rgba(255,255,255,0.85);
+            z-index: 1001;
+        }
+
+        .slider-container {
+            margin-top: 140px;
+            z-index: 999;
+        }
+
+        body {
+            padding-top: 120px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo img {
+            height: 50px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .top-nav {
+            background: rgba(255,255,255,0.95);
+            padding: 1rem;
+            position: fixed;
+            top: 80px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .top-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            list-style: none;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .top-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .top-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        .top-nav a:hover::after {
+            width: 100%;
+        }
+
+        .slider-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            height: 500px;
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.3);
+            color: white;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-btn:hover {
+            background: rgba(0,0,0,0.6);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--secondary);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .indicator.active { background: white; }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-nav ul {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                justify-content: center;
+            }
+            
+            .slider-container {
+                height: 300px;
+            }
+        }
+
+          .content-section {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .content-text {
+        background: rgba(255,255,255,0.9);
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .content-text h2 {
+        color: var(--primary);
+        margin-bottom: 15px;
+        font-size: 1.8rem;
+    }
+
+    .content-text p {
+        color: #666;
+        line-height: 1.7;
+        margin-bottom: 25px;
+        font-size: 1rem;
+    }
+
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .image-card {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s;
+        height: 300px;
+    }
+
+    .image-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .image-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .image-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .image-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255,255,255,0.9);
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 0.3s;
+        text-align: center;
+    }
+
+    .image-card:hover .image-overlay {
+        transform: translateY(0);
+    }
+
+    .image-overlay h3 {
+        color: var(--primary);
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+    }
+
+    .image-overlay p {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    @media (max-width: 992px) {
+        .image-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .image-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .image-card {
+            height: 250px;
+        }
+    }
+
+    .footer {
+        background: var(--primary);
+        color: var(--light);
+        padding: 40px 20px 20px;
+        margin-top: 50px;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+    }
+
+    .footer-section h4 {
+        color: var(--secondary);
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+    }
+
+    .footer-section p, .footer-section a {
+        color: var(--light);
+        line-height: 1.6;
+        font-size: 0.9rem;
+    }
+
+    .footer-section a {
+        text-decoration: none;
+        display: block;
+        transition: color 0.3s;
+    }
+
+    .footer-section a:hover {
+        color: var(--secondary);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding-top: 30px;
+        margin-top: 30px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            
+            <h1>School Event Management System</h1>
+        </div>
+    </header>
+
+    <nav class="top-nav">
+        <ul>
+
+            <li><a href="Home.html">Home</a></li>
+            <li><a href="signup.html">Sign Up</a></li>
+            <li><a href="Login.html">Login</a></li>
+            <li><a href="Dashboard.html">Dashboard</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+            <li><a href="Account.php">Account</a></li>
+        </ul>
+    </nav>
+
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slide"><img src="https://sbs.strathmore.edu/wp-content/uploads/2023/05/Strathmore-University-Business-School-A-Must-Watch-Institution-for-Business-Education-in-Africa-web1.png" alt="Event 1"></div>
+            <div class="slide"><img src="https://www.visionvivaah.com/blog/wp-content/uploads/2019/10/Best-Event-Management-Company-In-Mumbai.jpg" alt="Event 2"></div>
+            <div class="slide"><img src="https://sc.edu/about/offices_and_divisions/conference_event_planning/images/home_banner_images/home_banner_conferences_44976472.jpg" alt="Event 3"></div>
+        </div>
+        <button class="slider-btn prev">❮</button>
+        <button class="slider-btn next">❯</button>
+        <div class="indicators"></div>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <img src="https://img.freepik.com/free-photo/view-messy-office-workspace-with-laptop_23-2150282025.jpg" alt="Planning">
+            <h3>Manage Your Academics</h3>
+            <p>Manage your academics by staying organized, setting clear goals, prioritizing tasks, maintaining discipline, and seeking help.</p>
+        </div>
+        <div class="feature-card">
+            <img src="https://summer.harvard.edu/wp-content/uploads/sites/7/2022/10/Time-management-tips.jpg" alt="Calendar">
+            <h3>Stay in Control</h3>
+            <p>Manage your academics effectively by staying in control with a well-structured, personalized timetable and discipline.</p>
+        </div>
+        <div class="feature-card">
+            <img src="https://media.istockphoto.com/id/1658546576/photo/2024-calendar-event-planning-timetable-agenda-plan-on-organize-schedule-event-planner-agenda.jpg?s=612x612&w=0&k=20&c=pZ5YYUxHO6FsXMtV8D3v_5k5Yfhx6xu_eLub7rXqxjc=" alt="Collaboration">
+            <h3>Team Collaboration</h3>
+            <p>Integrated collaboration tools for staff and students. Share ideas, assign tasks, and track progress in real-time.</p>
+        </div>
+    </div>
+
+    <div class="content-section">
+    <div class="content-text">
+        <h2>About Our Event System</h2>
+        <p>Our School Event Management System revolutionizes how educational institutions organize and manage their events. With intuitive tools and real-time collaboration features, we empower administrators, teachers, and students to create memorable school experiences.  The system also allows customization to meet specific event needs, whether for conferences, school functions, corporate meetings, or social gatherings. By simplifying logistics and reducing manual effort, this event management system saves time, improves organization, and ensures a successful and well-coordinated event experience for everyone involved.</p>
+        
+        <h2>Key Features</h2>
+        <p>From academic conferences to sports days and cultural festivals, our event management system offers comprehensive, end-to-end solutions tailored to meet diverse event needs. With advanced scheduling tools, organizers can efficiently plan event timelines, allocate time slots, and avoid scheduling conflicts. Our resource management feature ensures that venues, equipment, and materials are effectively assigned and tracked, reducing logistical challenges.
+
+Participant registration is made seamless through a user-friendly interface that supports online sign-ups, automated confirmations, and real-time attendance tracking. Automated notifications keep all stakeholders informed with timely updates, reminders, and alerts, ensuring smooth coordination and reducing last-minute confusion. Additionally, our system integrates with communication tools, allowing direct messaging, announcements, and feedback collection.
+
+Experience effortless event coordination with our smart system, which enhances collaboration among organizers, participants, and volunteers. Whether managing small-scale workshops or large-scale festivals, our platform provides a structured, efficient, and highly customizable approach to event planning, ensuring a well-organized and successful experience.</p>
+    </div>
+
+    <div class="image-grid">
+        <div class="image-card">
+            <img src="https://cdn3.mozzartsport.co.ke/upload/825x464/News/Image/2022_10/1667223164612_1629105131381_Strath.jpg" alt="Planning">
+            <div class="image-overlay">
+                <h3>Sports Event</h3>
+                <p>The rugby event was efficiently managed with teamwork, organization, scheduling, and crowd control.</p>
+            </div>
+        </div>
+        <div class="image-card">
+            <img src="https://sbs.strathmore.edu/wp-content/uploads/2023/07/The-Annual-Strathmore-University-HR-Summit-2023-2.jpg" alt="Students">
+            <div class="image-overlay">
+                <h3>Student Engagement</h3>
+                <p>Interactive participation tracking and feedback systems, where conferences are held.</p>
+            </div>
+        </div>
+        <div class="image-card">
+            <img src="https://shss.strathmore.edu/wp-content/uploads/2021/12/sl1.jpg" alt="Technology">
+            <div class="image-overlay">
+                <h3>Seamless Adventure</h3>
+                <p>The trip was smoothly managed with planning, coordination, time management, safety, and organization.</p>
+            </div>
+        </div>
+        <div class="image-card">
+            <img src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXfkjRppauitefh2aBH4lt-oANc_63X6ucSX8Ou6u8k0h_NwFihmYCMHOqgH8iEYGbJdMDIF6SuPUHXIy32Qg0fKBPTjV5lWpU083VYDgv1qLuUrz5dFl-XqIlBsFD2kucHwXmyvQA?key=mZGArjk3KBqvrz_ExXhB46-G" alt="Collaboration">
+            <div class="image-overlay">
+                <h3>Team Co-ordination</h3>
+                <p>Real-time communication and task management</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+       
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const indicatorsContainer = document.querySelector('.indicators');
+
+        // Create indicators
+        slides.forEach((_, i) => {
+            const indicator = document.createElement('div');
+            indicator.classList.add('indicator');
+            if(i === 0) indicator.classList.add('active');
+            indicator.addEventListener('click', () => goToSlide(i));
+            indicatorsContainer.appendChild(indicator);
+        });
+
+        document.querySelector('.prev').addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlider();
+        });
+
+        document.querySelector('.next').addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlider();
+        });
+
+        function updateSlider() {
+            document.querySelector('.slider').style.transform = 
+                `translateX(-${currentSlide * 100}%)`;
+            document.querySelectorAll('.indicator').forEach((indicator, i) => {
+                indicator.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlider();
+        }
+
+        // Auto-advance slider every 5 seconds
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlider();
+        }, 5000);
+
+
+         document.getElementById('year').textContent = new Date().getFullYear();
+
+
+
+    </script>
+
+
+    <footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h4>Contact Us</h4>
+            <p>Email: eschoolventsystem@gmail.com</p>
+            <p>Phone: (+254) 7-1234-5678</p>
+            <p>Address: 123 Campus Road, Nairobi City</p>
+        </div>
+        
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="file:///C:/xampp/htdocs/Event_manager/Login.html">Log-In</a></li>
+                <li><a href="file:///C:/xampp/htdocs/Event_manager/signup.html">Sign-Up</a></li>
+                <li><a href="file:///C:/xampp/htdocs/Event_manager/Dashboard.html">Dashboard</a></li>
+              
+            </ul>
+        </div>
+        
+        
+    </div>
+    
+    <div class="footer-bottom">
+        <p>© <span id="year"></span> School Event Management System. All rights reserved.</p>
+    </div>
+</footer>
+
+
+
+</body>
+</html>
