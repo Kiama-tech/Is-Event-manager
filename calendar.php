@@ -1,3 +1,19 @@
+<?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['admission_number'])) {
+    // Redirect to the home page or login page if not logged in
+    header("Location: Login.html");
+    exit();
+}
+
+// Continue with the rest of the page content
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +53,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-         .logo h1 {
+        .logo h1 {
             background: linear-gradient(45deg, var(--secondary), var(--accent));
             -webkit-background-clip: text;
             background-clip: text;
@@ -55,16 +71,10 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Adjusted Navigation Positioning */
         .top-nav {
             top: 60px;
             background: rgba(255,255,255,0.85);
             z-index: 1001;
-        }
-
-        .slider-container {
-            margin-top: 140px;
-            z-index: 999;
         }
 
         body {
@@ -248,7 +258,7 @@
             background: rgba(0,0,0,0.5);
             justify-content: center;
             align-items: center;
-            z-index: 998;
+            z-index: 1002; /* Increased z-index to ensure it's on top */
         }
 
         .modal-content {
@@ -299,58 +309,91 @@
             background: var(--accent);
         }
 
+        .edit-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .edit-button:hover {
+            background: var(--secondary);
+        }
+
         .footer {
-        background: var(--primary);
-        color: var(--light);
-        padding: 40px 20px 20px;
-        margin-top: 50px;
-    }
+            background: var(--primary);
+            color: var(--light);
+            padding: 40px 20px 20px;
+            margin-top: 50px;
+        }
 
-    .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 30px;
-    }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
 
-    .footer-section h4 {
-        color: var(--secondary);
-        margin-bottom: 15px;
-        font-size: 1.2rem;
-    }
+        .footer-section h4 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
 
-    .footer-section p, .footer-section a {
-        color: var(--light);
-        line-height: 1.6;
-        font-size: 0.9rem;
-    }
+        .footer-section p, .footer-section a {
+            color: var(--light);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
 
-    .footer-section a {
-        text-decoration: none;
-        display: block;
-        transition: color 0.3s;
-    }
+        .footer-section a {
+            text-decoration: none;
+            display: block;
+            transition: color 0.3s;
+        }
 
-    .footer-section a:hover {
-        color: var(--secondary);
-    }
+        .footer-section a:hover {
+            color: var(--secondary);
+        }
 
-    .footer-bottom {
-        text-align: center;
-        padding-top: 30px;
-        margin-top: 30px;
-        border-top: 1px solid rgba(255,255,255,0.1);
-    }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
 
+        /* Button container for event actions */
+        .event-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
 
+        .event-actions button {
+            flex: 1;
+            margin: 0 5px;
+        }
 
+        /* Hide form by default */
+        #add-event-form {
+            display: none;
+        }
+
+        /* Show add event button by default */
+        #add-event-button {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="logo">
-            
             <h1>School Event Management System</h1>
         </div>
     </header>
@@ -359,11 +402,9 @@
         <ul>
 
             <li><a href="Home_page.html">Home</a></li>
-            <li><a href="signup.html">Sign Up</a></li>
-            <li><a href="Login.html">Login</a></li>
-            <li><a href="Dashboard.html">Dashboard</a></li>
-            <li><a href="calendar.html">Calendar</a></li>
-            <li><a href="Account.html">Account</a></li>
+            <li><a href="Dashboard.php">Dashboard</a></li>
+            <li><a href="calendar.php">Calendar</a></li>
+            <li><a href="Account.php">Account</a></li>
 
         </ul>
     </nav>
@@ -393,32 +434,60 @@
         <div class="modal-content">
             <h3 id="modal-date">Selected Date</h3>
             <div id="modal-events"></div>
+            
+            <!-- Add event button (shown by default) -->
+            <button id="add-event-button" class="edit-button" style="margin-top: 20px;">Add New Event</button>
+            
             <form class="add-event-form" id="add-event-form">
-                <input type="date" id="event-date" required>
-                <input type="text" id="event-title" placeholder="Event Title" required>
-                <input type="time" id="event-time" required>
-                <input type="text" id="event-venue" placeholder="Event Venue" required>
-                <button type="submit">Add Event</button>
-            </form>            
-            <button class="close-button" onclick="closeModal()">Close</button>
+                <input type="hidden" id="event-id" name="event_id">
+                <input type="date" id="event-date" name="event_date" required>
+                <input type="text" id="event-title" name="event_title" placeholder="Event Title" required>
+                <input type="time" id="event-time" name="event_time" required>
+                <input type="text" id="event-venue" name="event_venue" placeholder="Event Venue" required>
+                
+                <div class="event-actions">
+                    <button type="button" id="save-event-button">Save Event</button>
+                    <button type="button" id="cancel-form-button" class="close-button">Cancel</button>
+                </div>
+            </form>
+            
+            <button class="close-button" id="close-modal-button" style="width: 100%; margin-top: 20px;">Close</button>
         </div>
     </div>
 
     <script>
-        
-    // Set the minimum date to today
-const today = new Date().toISOString().split('T')[0];
-document.getElementById('event-date').setAttribute('min', today);
+        let currentDate = new Date();
+let events = [];
+let editingEventId = null;
+let isEditing = false;
 
-let currentDate = new Date();
-let events = [
-    { date: '2024-03-15', title: 'Science Fair', time: '9:00 AM' },
-    { date: '2024-03-20', title: 'Sports Day', time: '8:00 AM' },
-    { date: '2024-03-25', title: 'Parent Meeting', time: '2:00 PM' }
-];
+// DOM elements
+const addEventForm = document.getElementById('add-event-form');
+const addEventButton = document.getElementById('add-event-button');
+const saveEventButton = document.getElementById('save-event-button');
+const cancelFormButton = document.getElementById('cancel-form-button');
+const closeModalButton = document.getElementById('close-modal-button');
+const eventModal = document.getElementById('event-modal');
+
+// Function to fetch events from the server
+async function fetchEvents() {
+    try {
+        const response = await fetch('get_events.php');
+        const data = await response.json();
+        if (data.status === "error") {
+            console.error(data.message);
+            return [];
+        }
+        return data;
+    } catch (error) {
+        console.error("Error fetching events:", error);
+        return [];
+    }
+}
 
 // Function to generate the calendar grid
-function generateCalendar() {
+async function generateCalendar() {
+    events = await fetchEvents();
     const calendarGrid = document.querySelector('.calendar-grid');
     const monthYear = document.getElementById('current-month');
     const year = currentDate.getFullYear();
@@ -451,7 +520,7 @@ function generateCalendar() {
     // Create days for current month
     for (let day = 1; day <= endDate; day++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const dayEvents = events.filter(e => e.date === dateStr);
+        const dayEvents = events.filter(e => e.event_date === dateStr);
         const dayElement = createDayElement(day, dayEvents, dateStr);
         calendarGrid.appendChild(dayElement);
     }
@@ -466,10 +535,9 @@ function createDayElement(dayNumber, events, dateStr) {
         <div class="day-number">${dayNumber}</div>
         <div class="event-list">
             ${events.map(event => `
-                <div class="event-item"
-                     onclick="showEventDetail('${event.date}', '${event.title}')">
+                <div class="event-item" data-event-id="${event.id}">
                     <span class="event-dot"></span>
-                    ${event.title}
+                    ${event.event_title}
                 </div>
             `).join('')}
         </div>
@@ -478,11 +546,24 @@ function createDayElement(dayNumber, events, dateStr) {
     // Highlight current day
     const today = new Date();
     if (currentDate.getMonth() === today.getMonth() &&
+        currentDate.getFullYear() === today.getFullYear() &&
         dayNumber === today.getDate()) {
         dayElement.classList.add('current-day');
     }
 
     dayElement.addEventListener('click', () => openModal(dateStr));
+
+    // Add event listeners to each event item
+    setTimeout(() => {
+        const eventItems = dayElement.querySelectorAll('.event-item');
+        eventItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent day click
+                const eventId = parseInt(item.getAttribute('data-event-id'));
+                showEventDetail(dateStr, eventId);
+            });
+        });
+    }, 0);
 
     return dayElement;
 }
@@ -496,59 +577,192 @@ function createEmptyDay() {
 }
 
 // Function to show event details in the modal
-function showEventDetail(date, title) {
-    const modal = document.getElementById('event-modal');
+function showEventDetail(date, eventId) {
+    const event = events.find(e => e.id === eventId);
+    if (!event) return;
+
+    resetModalState();
+
     const modalDate = document.getElementById('modal-date');
     const modalEvents = document.getElementById('modal-events');
 
     modalDate.textContent = new Date(date).toDateString();
     modalEvents.innerHTML = `
-        <h4>${title}</h4>
-        <p>Date: ${date}</p>
+        <div class="event-item">
+            <h4>${event.event_title}</h4>
+            <p>Time: ${event.event_time}</p>
+            <p>Venue: ${event.event_venue}</p>
+        </div>
+        <button class="edit-button" id="edit-event-button" data-event-id="${event.id}">Edit Event</button>
     `;
-    modal.style.display = 'flex';
+
+    eventModal.style.display = 'flex';
+
+    // Add event listener to edit button
+    document.getElementById('edit-event-button').addEventListener('click', () => {
+        editEvent(eventId);
+    });
 }
 
-// Function to open the modal to add an event
+// Function to open the modal to add/view events
 function openModal(date) {
-    const modal = document.getElementById('event-modal');
+    resetModalState();
+
     const modalDate = document.getElementById('modal-date');
     const modalEvents = document.getElementById('modal-events');
-    const addEventForm = document.getElementById('add-event-form');
 
     modalDate.textContent = new Date(date).toDateString();
     document.getElementById('event-date').value = date;
-    const dayEvents = events.filter(e => e.date === date);
-    modalEvents.innerHTML = dayEvents.map(event => `
-        <div class="event-item">
-            <h4>${event.title}</h4>
-            <p>Time: ${event.time}</p>
-            <p>Venue: ${event.venue}</p> <!-- Displaying venue -->
-        </div>
-    `).join('');
 
-    addEventForm.onsubmit = function(e) {
-        e.preventDefault();
-        const title = document.getElementById('event-title').value;
-        const time = document.getElementById('event-time').value;
-        const venue = document.getElementById('event-venue').value; // Capture venue input
-        addEvent(date, title, time, venue);
-        closeModal();
-        generateCalendar();
-    };
+    const dayEvents = events.filter(e => e.event_date === date);
 
-    modal.style.display = 'flex';
+    if (dayEvents.length > 0) {
+        modalEvents.innerHTML = `<h4>Events on this day:</h4>`;
+        dayEvents.forEach(event => {
+            modalEvents.innerHTML += `
+                <div class="event-item" data-event-id="${event.id}">
+                    <h4>${event.event_title}</h4>
+                    <p>Time: ${event.event_time}</p>
+                    <p>Venue: ${event.event_venue}</p>
+                    <button class="edit-button" onclick="editEvent(${event.id})">Edit</button>
+                </div>
+            `;
+        });
+    } else {
+        modalEvents.innerHTML = `<p>No events scheduled for this day.</p>`;
+    }
+
+    eventModal.style.display = 'flex';
 }
 
-// Function to add an event with venue
-function addEvent(date, title, time, venue) {
-    events.push({ date, title, time, venue }); // Adding venue to the event object
+// Reset modal to its default state
+function resetModalState() {
+    addEventForm.style.display = 'none';
+    addEventButton.style.display = 'block';
+    document.getElementById('event-id').value = '';
+    addEventForm.reset();
+    isEditing = false;
+    editingEventId = null;
+}
+
+// Function to edit an event
+function editEvent(eventId) {
+    const event = events.find(e => e.id === eventId);
+    if (!event) return;
+
+    // Set form values
+    document.getElementById('event-id').value = event.id;
+    document.getElementById('event-date').value = event.event_date;
+    document.getElementById('event-title').value = event.event_title;
+    document.getElementById('event-time').value = event.event_time;
+    document.getElementById('event-venue').value = event.event_venue;
+
+    // Show form and hide add button
+    addEventForm.style.display = 'flex';
+    addEventButton.style.display = 'none';
+
+    // Set editing state
+    isEditing = true;
+    editingEventId = event.id;
+}
+
+// Function to save an event
+async function saveEvent() {
+    const eventId = document.getElementById('event-id').value;
+    const eventDate = document.getElementById('event-date').value;
+    const eventTitle = document.getElementById('event-title').value;
+    const eventTime = document.getElementById('event-time').value;
+    const eventVenue = document.getElementById('event-venue').value;
+
+    // Log the data to ensure it's captured correctly
+    console.log({ eventId, eventDate, eventTitle, eventTime, eventVenue });
+
+    if (isEditing && eventId) {
+        // Update existing event
+        await updateEvent(eventId, eventDate, eventTitle, eventTime, eventVenue);
+    } else {
+        // Add new event
+        await addEvent(eventDate, eventTitle, eventTime, eventVenue);
+    }
+
+    closeModal();
+    generateCalendar();
+}
+
+// Function to update an event
+async function updateEvent(eventId, eventDate, eventTitle, eventTime, eventVenue) {
+    try {
+        const response = await fetch('event_handler.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                event_id: eventId,
+                event_date: eventDate,
+                event_title: eventTitle,
+                event_time: eventTime,
+                event_venue: eventVenue,
+            }),
+        });
+        const result = await response.json();
+        if (result.status === "success") {
+            alert("Event updated successfully!");
+        } else {
+            console.error("Error updating event:", result.message);
+        }
+    } catch (error) {
+        console.error("Error updating event:", error);
+    }
+}
+
+// Function to add a new event
+async function addEvent(eventDate, eventTitle, eventTime, eventVenue) {
+    try {
+        const response = await fetch('add_event.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                event_date: eventDate,
+                event_title: eventTitle,
+                event_time: eventTime,
+                event_venue: eventVenue,
+            }),
+        });
+        const result = await response.json();
+        if (result.status === "success") {
+            alert("Event added successfully!");
+        } else {
+            console.error("Error adding event:", result.message);
+        }
+    } catch (error) {
+        console.error("Error adding event:", error);
+    }
 }
 
 // Function to close the modal
 function closeModal() {
-    document.getElementById('event-modal').style.display = 'none';
+    eventModal.style.display = 'none';
+    resetModalState();
 }
+
+// Event Listeners
+addEventButton.addEventListener('click', () => {
+    addEventForm.style.display = 'flex';
+    addEventButton.style.display = 'none';
+});
+
+saveEventButton.addEventListener('click', saveEvent);
+
+cancelFormButton.addEventListener('click', () => {
+    addEventForm.style.display = 'none';
+    addEventButton.style.display = 'block';
+    addEventForm.reset();
+});
+
+closeModalButton.addEventListener('click', closeModal);
 
 // Navigation handlers for previous and next month
 document.getElementById('prev-month').addEventListener('click', () => {
@@ -561,40 +775,39 @@ document.getElementById('next-month').addEventListener('click', () => {
     generateCalendar();
 });
 
+// Define editEvent in global scope for use in onclick handlers
+window.editEvent = editEvent;
+
 // Initialize the calendar on page load
-generateCalendar();
+document.addEventListener('DOMContentLoaded', () => {
+    generateCalendar();
+});
 
-</script>
-
-
-    <footer class="footer">
-    <div class="footer-content">
-        <div class="footer-section">
-            <h4>Contact Us</h4>
-            <p>Email: eschoolventsystem@gmail.com</p>
-            <p>Phone: (+254) 7-1234-5678</p>
-            <p>Address: 123 Campus Road, Nairobi City</p>
-        </div>
-        
-        <div class="footer-section">
-            <h4>Quick Links</h4>
-            <ul>
-                <li><a href="file:///C:/xampp/htdocs/Event_manager/Login.html">Log-In</a></li>
-                <li><a href="file:///C:/xampp/htdocs/Event_manager/signup.html">Sign-Up</a></li>
-                <li><a href="file:///C:/xampp/htdocs/Event_manager/Dashboard.html">Dashboard</a></li>
-              
-            </ul>
-        </div>
-        
-        
-    </div>
+    </script>
     
-    <div class="footer-bottom">
-        <p>© <span id="year"></span> School Event Management System. All rights reserved.</p>
-    </div>
-</footer>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Contact Us</h4>
+                <p>Email: eschoolventsystem@gmail.com</p>
+                <p>Phone: (+254) 7-1234-5678</p>
+                <p>Address: 123 Campus Road, Nairobi City</p>
+            </div>
 
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="Login.html">Log-In</a></li>
+                    <li><a href="signup.html">Sign-Up</a></li>
+                    <li><a href="Dashboard.html">Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
 
-
+        <div class="footer-bottom">
+            <p>© <span id="year"></span> School Event Management System. All rights reserved.</p>
+            <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+        </div>
+    </footer>
 </body>
 </html>

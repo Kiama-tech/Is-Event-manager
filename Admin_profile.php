@@ -9,9 +9,10 @@ if (!file_exists('connect.php')) {
 }
 include 'connect.php';
 
-// Redirect if the user is not logged in
-if (!isset($_SESSION['admission_number'])) {
-    header("Location: Login.html");
+// Check if the user is logged in and has a valid admin key
+if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'Admin' || empty($_SESSION['admin_key'])) {
+    // Redirect to admin login page if not an admin or admin key is missing
+    header("Location: Admin-login.html");
     exit();
 }
 
@@ -21,29 +22,30 @@ if (!$conn) {
     die("Database connection failed: " . mysqli_connect_error());
 }
 
-// Fetch user details from the database using admission number
-$admission_number = $_SESSION['admission_number'];
+// Fetch admin details from the database using user ID
+$user_id = $_SESSION['user_id'];
 
-$sql = "SELECT id, username, email, user_type FROM user WHERE admission_number = ?";
+$sql = "SELECT id, username, email, user_type, admin_key FROM user WHERE id = ?";
 $stmt = $conn->prepare($sql);
 
 if ($stmt) {
-    $stmt->bind_param("s", $admission_number); // Bind admission_number to query
+    $stmt->bind_param("i", $user_id); // Bind user_id to query
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows == 1) {
         $user = $result->fetch_assoc();
-        // Store user details in session securely
+        // Store admin details in session securely
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['user_type'] = $user['user_type'];
+        $_SESSION['admin_key'] = $user['admin_key'];
     } else {
         // User not found, destroy session and redirect
         session_unset();
         session_destroy();
-        header("Location: Login.html");
+        header("Location: Admin-login.login");    
         exit();
     }
 
@@ -56,12 +58,13 @@ if ($stmt) {
 CloseCon($conn);
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Page</title>
+    <title>Admin Profile Page</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -296,20 +299,16 @@ CloseCon($conn);
     </header>
     <nav class="top-nav">
         <ul>
-
-            <li><a href="Home_page.html">Home</a></li>
-            <li><a href="Dashboard.php">Dashboard</a></li>
-            <li><a href="calendar.php">Calendar</a></li>
-            <li><a href="Account.php">Account</a></li>
-
+            <li><a href="Admin-dashboard.php">Dashboard</a></li>
+            <li><a href="Admin_profile.php">Account</a></li>
         </ul>
     </nav>
     <div class="profile-container">
         <div class="profile-header">
-            <h2>My Profile</h2>
+            <h2>Admin Profile</h2>
         </div>
         <div class="profile-section">
-           
+            
             <div class="personal-info">
                 <h3>Personal Information</h3>
                 <table class="info-table">
@@ -318,13 +317,14 @@ CloseCon($conn);
                         <td><input type="text" id="full-name" value="<?php echo $_SESSION['username']; ?>"></td>
                     </tr>
                     <tr>
-                        <th>Admission</th>
-                        <td><input type="text" id="admission" value="<?php echo $_SESSION['admission_number']; ?>"></td>
+                        <th>Email</th>
+                        <td><input type="text" id="email" value="<?php echo $_SESSION['email']; ?>"></td>
                     </tr>
                     <tr>
                         <th>Role</th>
                         <td><input type="text" id="role" value="<?php echo $_SESSION['user_type']; ?>"></td>
                     </tr>
+                   
                 </table>
             </div>
         </div>

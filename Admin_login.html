@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Event System - Sign Up</title>
+    <title>School Event System - Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -135,27 +135,17 @@
             transform: translateY(-2px);
         }
 
-        #password-error {
-            color: var(--accent);
-            font-size: 0.9rem;
-            margin: -10px 0 15px;
-            display: none;
-        }
-
-        p {
+        .forgot-password {
+            display: block;
             text-align: center;
-            margin-top: 20px;
-            color: white;
-        }
-
-        a {
-            color: var(--accent);
+            color: var(--primary);
+            margin: 15px 0;
             text-decoration: none;
             transition: color 0.3s;
         }
 
-        a:hover {
-            color: var(--secondary);
+        .forgot-password:hover {
+            color: var(--accent);
         }
 
         @media (max-width: 768px) {
@@ -262,7 +252,6 @@
     }
 
 
-
     </style>
 </head>
 <body>
@@ -283,66 +272,31 @@
     <main class="auth-container">
         <div class="auth-box">
             <div class="auth-option">
-                <h2>Get Started</h2>
-                <p>Create your account to manage school events</p>
+                <h2>Welcome Back!</h2>
+                <p>Manage your academic schedule and events</p>
             </div>
             <div class="auth-form">
-                <form id="signup-form" action="signup.php" method="post">
-                    <h3>Create Account</h3>
-
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
-
+                <form id="login-form" action="admin_login.php" method="post">
+                    <h3>User Login</h3>
+    
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
 
-                    <label for="admission_number">Admission Number</label>
-                    <input type="text" id="admission_number" name="admission_number" required>
-
-                    <label for="user_type">Select Account Type:</label>
-                    <select id="user_type" name="user_type" required onchange="toggleAdminKey()">
-                        <option value="" disabled selected>Select your account type</option>
-                        <option value="Student">Student</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-
-                    <div id="admin-key-container" style="display: none;">
-                        <label for="admin_key">Enter Admin Key:</label>
-                        <input type="password" id="admin_key" name="admin_key">
-                    </div>
-
+                    <label for="admin_key">Admin Key</label>
+                    <input type="text" id="admin_key" name="admin_key" required>
+    
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
-
-                    <label for="confirm_password">Confirm Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required>
-                    <div id="password-error" style="display:none; color:red;">Passwords do not match</div>
-
-                    <button type="submit" class="btn">Sign Up</button>
-
-                    <p style="color: #1a252f;">Already have an account? <a href="Login.html">Login here</a></p>
-                    <p style="color: #1a252f;">Not a student<a href="Admin_login.html">Click here</a></p>
+    
+                    <button type="submit" class="btn">Sign In</button>
+                    
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                    
+                    <p style="text-align: center; margin-top: 20px;">
+                        Don't have an account? <a href="signup.html" style="color: var(--accent);">Create Account</a>
+                    </p>
                 </form>
             </div>
         </div>
     </main>
-    
-    <script>
-        function toggleAdminKey() {
-            var userType = document.getElementById("user_type").value;
-            var adminKeyContainer = document.getElementById("admin-key-container");
-            var admissionNumberField = document.getElementById("admission_number");
-    
-            if (userType === "Admin") {
-                adminKeyContainer.style.display = "block";
-                admissionNumberField.removeAttribute("required");
-                admissionNumberField.value = ""; // Ensure it's empty if not used
-            } else {
-                adminKeyContainer.style.display = "none";
-                admissionNumberField.setAttribute("required", "required");
-            }
-        }
-    </script>
-    
-</body>
-</html>
+

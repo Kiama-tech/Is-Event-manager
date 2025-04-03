@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $admin_key = isset($_POST['admin_key']) ? trim($_POST['admin_key']) : null;
 
     // Validate required fields
-    if (empty($username) || empty($email) || empty($password) || empty($user_type) || empty($admission_number)) {
+    if (empty($username) || empty($email) || empty($password) || empty($user_type)) {
         die("Error: Missing form fields! <a href='Signup.html'>Go back</a>");
     }
 
@@ -59,6 +59,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Error preparing statement: " . $conn->error);
         }
         $stmt->bind_param("sssss", $username, $email, $user_type, $admin_key, $hashed_password);
+
+        // Execute statement
+        if ($stmt->execute()) {
+            header("Location: Admin_login.html"); // Redirect to admin login page
+            exit();
+        } else {
+            echo "Error inserting data: " . $stmt->error;
+        }
     } else {
         // Insert for non-Admin user
         $sql = "INSERT INTO user (username, email, admission_number, user_type, password_hash) VALUES (?, ?, ?, ?, ?)";
@@ -67,14 +75,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Error preparing statement: " . $conn->error);
         }
         $stmt->bind_param("sssss", $username, $email, $admission_number, $user_type, $hashed_password);
-    }
 
-    // Execute statement
-    if ($stmt->execute()) {
-        header("Location: Login.html"); // Redirect after successful signup
-        exit();
-    } else {
-        echo "Error inserting data: " . $stmt->error;
+        // Execute statement
+        if ($stmt->execute()) {
+            header("Location: Login.html"); // Redirect to general login page
+            exit();
+        } else {
+            echo "Error inserting data: " . $stmt->error;
+        }
     }
 
     $stmt->close();
